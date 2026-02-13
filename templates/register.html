@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pudami AI | Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        h1 { font-family: 'Playfair Display', serif; }
+        .input-focus:focus { border-color: #E1AD01 !important; outline: none; }
+    </style>
+</head>
+<body class="bg-[#FAF9F6] min-h-screen flex items-center justify-center p-6">
+
+    <div class="bg-white p-12 rounded-[3rem] shadow-sm w-full max-w-lg border border-slate-100">
+        
+        <div class="text-center mb-10">
+            <h1 id="title" class="text-5xl font-bold text-[#3E4C26] tracking-tight">Login</h1>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for m in messages %}
+                    <div class="bg-[#3E4C26] text-[#E1AD01] p-4 rounded-xl mb-6 text-center font-bold text-[10px] uppercase tracking-widest">{{ m }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form id="lForm" action="/login_handler" method="POST" class="space-y-6">
+            <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Username</label>
+                <input type="text" name="username" class="w-full p-4 rounded-2xl border border-slate-100 bg-[#FAF9F6] input-focus text-[#3E4C26]" placeholder="Username" required>
+            </div>
+            <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Password</label>
+                <input type="password" name="password" class="w-full p-4 rounded-2xl border border-slate-100 bg-[#FAF9F6] input-focus text-[#3E4C26]" placeholder="Password" required>
+            </div>
+            <button class="w-full bg-[#3E4C26] text-white py-5 rounded-2xl font-bold text-xs tracking-[0.2em] uppercase hover:bg-[#2D381B] transition-all active:scale-[0.98]">
+                Login
+            </button>
+            <p class="text-center text-[12px] font-medium text-slate-400">
+                Not registered? <button type="button" onclick="toggle()" class="text-[#E1AD01] font-bold underline underline-offset-4">Register now</button>
+            </p>
+        </form>
+
+        <form id="rForm" action="/register_handler" method="POST" class="hidden space-y-6">
+            <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Full Name</label>
+                <input type="text" name="name" class="w-full p-4 rounded-2xl border border-slate-100 bg-[#FAF9F6] input-focus text-[#3E4C26]" placeholder="Your Name" required>
+            </div>
+            <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Username</label>
+                <input type="text" name="reg_username" class="w-full p-4 rounded-2xl border border-slate-100 bg-[#FAF9F6] input-focus text-[#3E4C26]" placeholder="Choose Username" required>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <input type="password" name="reg_password" placeholder="Password" class="w-full p-4 rounded-2xl border border-slate-100 bg-[#FAF9F6] input-focus text-[#3E4C26]" required>
+                <input type="password" name="confirm_password" placeholder="Confirm" class="w-full p-4 rounded-2xl border border-slate-100 bg-[#FAF9F6] input-focus text-[#3E4C26]" required>
+            </div>
+            
+            <button class="w-full bg-[#E1AD01] text-white py-5 rounded-2xl font-bold text-xs tracking-[0.2em] uppercase hover:bg-[#C49601] transition-all active:scale-[0.98]">
+                Register
+            </button>
+            <p class="text-center text-[12px] font-medium text-slate-400">
+                Already have an account? <button type="button" onclick="toggle()" class="text-[#3E4C26] font-bold underline underline-offset-4">Login here</button>
+            </p>
+        </form>
+    </div>
+
+    <script>
+        function toggle() {
+            const l=document.getElementById('lForm'), r=document.getElementById('rForm'), t=document.getElementById('title');
+            l.classList.toggle('hidden'); 
+            r.classList.toggle('hidden');
+            t.innerText = l.classList.contains('hidden') ? "Register" : "Login";
+        }
+    </script>
+</body>
+</html>

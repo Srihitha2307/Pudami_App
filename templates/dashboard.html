@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pudami AI | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2 { font-family: 'Playfair Display', serif; }
+
+        /* CUSTOM SCROLLBAR: Olive Theme */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #3E4C26; }
+        ::-webkit-scrollbar-thumb { 
+            background: #556B2F; 
+            border-radius: 10px; 
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #E1AD01; }
+        
+        /* For Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #556B2F #3E4C26;
+        }
+    </style>
+</head>
+<body class="bg-[#FAF9F6] text-[#2D2D2D] flex h-screen overflow-hidden">
+
+    <aside class="w-80 bg-[#3E4C26] flex flex-col border-r border-[#354121] shadow-2xl overflow-y-auto">
+        <div class="p-10 text-center">
+            <h1 class="text-3xl text-[#E1AD01] tracking-tight">Pudami </h1>
+            <div class="h-[1px] w-8 bg-[#E1AD01] mx-auto mt-3 opacity-30"></div>
+        </div>
+
+        <form action="" method="GET" class="px-8 space-y-6 mb-8">
+            <input type="hidden" name="section" value="{{ section }}">
+            <div>
+                <label class="text-[10px] font-bold text-[#A4B588] uppercase tracking-[0.2em] mb-2 block">Crop</label>
+                <select name="crop" onchange="this.form.submit()" class="w-full bg-[#4A5B2E] border-none rounded-lg p-3 text-sm text-white outline-none appearance-none cursor-pointer">
+                    <option {% if crop=='Paddy' %}selected{% endif %}>Paddy</option>
+                    <option {% if crop=='Sugarcane' %}selected{% endif %}>Sugarcane</option>
+                    <option {% if crop=='Wheat' %}selected{% endif %}>Wheat</option>
+                    <option {% if crop=='Soy bean' %}selected{% endif %}>Soy bean</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-[#A4B588] uppercase tracking-[0.2em] mb-2 block">Soil Type</label>
+                <select name="soil" onchange="this.form.submit()" class="w-full bg-[#4A5B2E] border-none rounded-lg p-3 text-sm text-white outline-none appearance-none cursor-pointer">
+                    <option {% if soil=='Alluvial' %}selected{% endif %}>Alluvial</option>
+                    <option {% if soil=='Black' %}selected{% endif %}>Black</option>
+                    <option {% if soil=='Clay' %}selected{% endif %}>Clay</option>
+                    <option {% if soil=='Red' %}selected{% endif %}>Red</option>
+                </select>
+            </div>
+        </form>
+
+        <nav class="px-6 space-y-1 flex-1">
+            <p class="text-[10px] font-bold text-[#A4B588] uppercase mb-2 px-4 tracking-widest opacity-60">Soil Parameters</p>
+            <a href="?section=water" class="flex items-center px-4 py-3 rounded-xl transition-all {% if section=='water' %}bg-[#E1AD01] text-[#3E4C26] font-bold{% else %}text-[#A4B588] hover:bg-[#4A5B2E] hover:text-white{% endif %}">
+                <span class="mr-3">💧</span> Water & ph
+            </a>
+            <a href="?section=npk" class="flex items-center px-4 py-3 rounded-xl transition-all {% if section=='npk' %}bg-[#E1AD01] text-[#3E4C26] font-bold{% else %}text-[#A4B588] hover:bg-[#4A5B2E] hover:text-white{% endif %}">
+                <span class="mr-3">🌱</span> NPK Levels
+            </a>
+            <a href="?section=temp" class="flex items-center px-4 py-3 rounded-xl transition-all {% if section=='temp' %}bg-[#E1AD01] text-[#3E4C26] font-bold{% else %}text-[#A4B588] hover:bg-[#4A5B2E] hover:text-white{% endif %}">
+                <span class="mr-3">🌡️</span> Temperature
+            </a>
+
+            <p class="text-[10px] font-bold text-[#A4B588] uppercase mt-6 mb-2 px-4 tracking-widest opacity-60">Atmospheric</p>
+            <a href="?section=sunlight" class="flex items-center px-4 py-3 rounded-xl transition-all {% if section=='sunlight' %}bg-[#E1AD01] text-[#3E4C26] font-bold{% else %}text-[#A4B588] hover:bg-[#4A5B2E] hover:text-white{% endif %}">
+                <span class="mr-3">☀️</span> Sunlight
+            </a>
+            <a href="?section=wind" class="flex items-center px-4 py-3 rounded-xl transition-all {% if section=='wind' %}bg-[#E1AD01] text-[#3E4C26] font-bold{% else %}text-[#A4B588] hover:bg-[#4A5B2E] hover:text-white{% endif %}">
+                <span class="mr-3">🌬️</span> Wind Speed and Direction
+            </a>
+
+            <p class="text-[10px] font-bold text-[#A4B588] uppercase mt-6 mb-2 px-4 tracking-widest opacity-60">Visuals</p>
+            <a href="?section=3dmapping" class="flex items-center px-4 py-3 rounded-xl transition-all {% if section=='3dmapping' %}bg-[#E1AD01] text-[#3E4C26] font-bold{% else %}text-[#A4B588] hover:bg-[#4A5B2E] hover:text-white{% endif %}">
+                <span class="mr-3">🗺️</span> 3D Mapping
+            </a>
+        </nav>
+
+        <div class="p-8 border-t border-[#4A5B2E]">
+            <a href="/login" class="text-[10px] text-center block font-bold text-[#A4B588] hover:text-white transition uppercase tracking-widest">Sign Out</a>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-16 overflow-y-auto">
+        <header class="flex justify-between items-center mb-16">
+            <div class="flex items-center gap-8">
+                <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-sm border border-[#E1AD01]/10">
+                    {% if crop == 'Paddy' %}🌾{% elif crop == 'Sugarcane' %}🎋{% elif crop == 'Wheat' %}🍞{% else %}🌱{% endif %}
+                </div>
+                <div>
+                    <p class="text-[#E1AD01] font-bold text-xs uppercase tracking-[0.3em] mb-2">{{ section }} Analytics</p>
+                    <h2 class="text-5xl font-bold text-[#3E4C26]">{{ crop }} Overview</h2>
+                </div>
+            </div>
+            
+            <div class="bg-white p-1 rounded-full flex border border-slate-200 shadow-sm">
+                <button onclick="setMode('sensor')" id="mode-sensor" class="px-8 py-2 rounded-full text-[11px] font-bold transition-all bg-[#3E4C26] text-white">LIVE SENSOR</button>
+                <button onclick="setMode('manual')" id="mode-manual" class="px-8 py-2 rounded-full text-[11px] font-bold transition-all text-slate-400">USER INPUT</button>
+            </div>
+        </header>
+
+        <div id="manual-input-area" class="hidden mb-12 bg-[#3E4C26] p-12 rounded-[3rem] shadow-2xl">
+            <div class="flex items-end gap-12">
+                <div class="flex-1 max-w-sm">
+                    <label class="text-[10px] text-[#A4B588] font-bold uppercase tracking-[0.2em]">Simulation Value (%)</label>
+                    <input type="number" id="userInputVal" class="w-full bg-transparent border-b border-[#A4B588]/40 py-3 mt-2 outline-none text-white text-3xl font-light placeholder-[#A4B588]/30">
+                </div>
+                <button onclick="compareManual()" class="bg-[#FAF9F6] text-[#3E4C26] hover:bg-[#E1AD01] hover:text-white px-12 py-4 rounded-full font-bold text-xs tracking-widest transition-all uppercase shadow-lg">Compare</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div class="bg-white p-12 rounded-[3.5rem] shadow-sm border border-slate-100 flex flex-col items-center">
+                <h3 class="font-bold text-slate-300 uppercase text-[10px] tracking-[0.2em] self-start mb-12">Level Distribution</h3>
+                <div class="relative w-80 h-80">
+                    <canvas id="mainChart"></canvas>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <span id="centerPercentage" class="text-6xl font-light text-[#3E4C26]">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-10">
+                <div class="bg-white p-12 rounded-[3rem] shadow-sm border border-slate-100">
+                    <div class="flex items-center mb-8">
+                        <div id="status-dot" class="h-2 w-2 rounded-full bg-[#E1AD01] mr-3"></div>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">AI Intelligence Brief</span>
+                    </div>
+                    <p id="dynamic-insight" class="text-3xl font-medium text-[#3E4C26] leading-snug mb-4">
+                        Field is reporting <span id="textPercent" class="font-bold text-[#E1AD01] italic">{{ data.vol if section=='water' else data.n }}%</span>.
+                    </p>
+                    <p class="text-sm text-slate-400 font-medium">Goal for {{ crop }} in {{ soil }} is {{ target }}%.</p>
+                </div>
+
+                <div id="suggestion-card" class="p-12 rounded-[3rem] bg-[#3E4C26] text-[#FAF9F6] shadow-xl">
+                    <h4 class="text-[#A4B588] font-bold uppercase text-[9px] mb-4 tracking-[0.3em]">Recommendation</h4>
+                    <p id="suggestion-text" class="text-xl font-light leading-relaxed italic">"Calculating resource efficiency..."</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let mode = 'sensor';
+        let sensorVal = {{ data.vol if section=='water' else data.n }};
+        const targetVal = {{ target }};
+        
+        function getColor(v) {
+            if (v <= 25) return '#722F37'; // Deep Wine
+            if (v <= 65) return '#3E4C26'; // Olive
+            return '#1B365D';             // Midnight Blue
+        }
+
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        const mainChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Level', 'Empty'],
+                datasets: [{
+                    data: [sensorVal, 100 - sensorVal],
+                    backgroundColor: [getColor(sensorVal), '#F8F8F8'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '88%',
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function updateUI(v) {
+            const val = parseInt(v);
+            mainChart.data.datasets[0].data = [val, 100 - val];
+            mainChart.data.datasets[0].backgroundColor[0] = getColor(val);
+            mainChart.update();
+
+            document.getElementById('centerPercentage').innerText = val + "%";
+            document.getElementById('textPercent').innerText = val + "%";
+            document.getElementById('textPercent').style.color = getColor(val);
+            document.getElementById('status-dot').style.backgroundColor = getColor(val);
+            
+            let sug = "Levels are currently within the expected range for {{ soil }} soil.";
+            if (val < targetVal - 10) sug = "Warning: Current levels are insufficient. Recommend increasing supply.";
+            else if (val > targetVal + 10) sug = "Caution: Excessive levels detected. Resource supply should be paused.";
+
+            document.getElementById('suggestion-text').innerText = sug;
+        }
+
+        function setMode(m) {
+            mode = m;
+            const btnS = document.getElementById('mode-sensor');
+            const btnM = document.getElementById('mode-manual');
+            const inputArea = document.getElementById('manual-input-area');
+            
+            if(m === 'sensor') {
+                btnS.className = 'px-8 py-2 rounded-full text-[11px] font-bold bg-[#3E4C26] text-white shadow-lg';
+                btnM.className = 'px-8 py-2 rounded-full text-[11px] font-bold text-slate-400';
+                inputArea.classList.add('hidden');
+                updateUI(sensorVal);
+            } else {
+                btnM.className = 'px-8 py-2 rounded-full text-[11px] font-bold bg-[#3E4C26] text-white shadow-lg';
+                btnS.className = 'px-8 py-2 rounded-full text-[11px] font-bold text-slate-400';
+                inputArea.classList.remove('hidden');
+            }
+        }
+
+        function compareManual() {
+            const val = document.getElementById('userInputVal').value;
+            if (val !== "") updateUI(val);
+        }
+
+        updateUI(sensorVal);
+    </script>
+</body>
+</html>
