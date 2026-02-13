@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pudami AI | Initialize</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', sans-serif; background-color: #FAF9F6; }
+        h1 { font-family: 'Playfair Display', serif; }
+        
+        /* A softer glow that matches your earthy tones */
+        .logo-glow {
+            filter: drop-shadow(0 10px 20px rgba(62, 76, 38, 0.15));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col items-center justify-center overflow-hidden">
+
+    <div class="text-center">
+        <div class="mb-10 animate-float">
+            <div class="w-40 h-40 mx-auto rounded-full overflow-hidden flex items-center justify-center logo-glow">
+                <img src="{{ url_for('static', filename='logo.png') }}" 
+                     alt="Pudami Logo" 
+                     class="w-full h-full object-cover scale-110">
+            </div>
+        </div>
+
+        <h1 class="text-[#3E4C26] text-7xl font-black tracking-tighter uppercase mb-2">
+            PUDAMI
+        </h1>
+        
+        <p class="text-[#A4B588] font-bold uppercase tracking-[0.5em] text-sm opacity-80">
+            Earth Intelligence System
+        </p>
+
+        <div class="w-48 h-1.5 bg-slate-200 mx-auto mt-10 rounded-full overflow-hidden">
+            <div class="bg-[#E1AD01] h-full" style="animation: progress 4s ease-in-out forwards;"></div>
+        </div>
+    </div>
+    
+    <a href="{{ url_for('index') }}" class="mt-12 bg-[#3E4C26] text-[#FAF9F6] px-16 py-4 rounded-full font-bold text-xs tracking-widest shadow-2xl hover:bg-[#E1AD01] hover:text-[#3E4C26] transition-all duration-500 transform hover:scale-105 active:scale-95 uppercase">
+        Initialize System
+    </a>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = "{{ url_for('index') }}";
+        }, 4000);
+    </script>
+
+</body>
+</html>
